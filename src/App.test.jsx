@@ -348,22 +348,15 @@ describe("portfolio navigation", () => {
         "Next.js",
         "Vue.js",
         "Angular",
-        "Svelte",
-        "Astro",
         "Tailwind CSS",
-        "Nuxt",
       ]),
     );
     expect(labels(groups[1])).toEqual(
       expect.arrayContaining([
-        "FastAPI",
         "Express",
-        "NestJS",
-        "Spring Boot",
         "Laravel",
         "ASP.NET Core",
         "MySQL",
-        "Redis",
         "MongoDB",
         "SQLite",
       ]),
@@ -372,16 +365,29 @@ describe("portfolio navigation", () => {
       expect.arrayContaining([
         "GitHub Actions",
         "Docker",
-        "Kubernetes",
-        "AWS",
-        "Terraform",
         "Vercel",
         "Postman",
-        "Playwright",
         "Vitest",
         "Figma",
       ]),
     );
+    const removedSkills = [
+      "Astro",
+      "Nuxt",
+      "Svelte",
+      "FastAPI",
+      "Spring Boot",
+      "Redis",
+      "NestJS",
+      "Terraform",
+      "Kubernetes",
+      "AWS",
+      "Playwright",
+    ];
+    const allLabels = groups.flatMap(labels);
+    for (const skill of removedSkills) {
+      expect(allLabels).not.toContain(skill);
+    }
     for (const group of groups) {
       expect(group.querySelectorAll(".stack__items")).toHaveLength(1);
       expect(group.querySelector(".stack__collection-title")).toBeNull();
