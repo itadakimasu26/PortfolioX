@@ -70,11 +70,11 @@ const stackGroups = [
     heading: "Frontend",
     accent: "#087ea4",
     items: [
-      [SiReact, "React", "#087ea4"],
-      [SiJavascript, "JavaScript", "#9b7411"],
-      [SiVite, "Vite", "#7c3aed"],
+      [SiReact, "React", "#61dafb"],
+      [SiJavascript, "JavaScript", "#f7df1e"],
+      [SiVite, "Vite", "#9135ff"],
       [SiHtml5, "HTML", "#e34f26"],
-      [SiCss, "CSS", "#1572b6"],
+      [SiCss, "CSS", "#663399"],
       [SiTypescript, "TypeScript", "#3178c6"],
       [SiNextdotjs, "Next.js", "#24292f"],
       [SiVuedotjs, "Vue.js", "#42b883"],
@@ -90,11 +90,11 @@ const stackGroups = [
     accent: "#0f766e",
     items: [
       [SiPython, "Python", "#3776ab"],
-      [SiDjango, "Django", "#0c6b4c"],
+      [SiDjango, "Django", "#092e20"],
       [SiNodedotjs, "Node.js", "#398b3f"],
-      [SiPhp, "PHP", "#686bb1"],
-      [SiMariadb, "MariaDB", "#9a5b33"],
-      [SiPostgresql, "PostgreSQL", "#336791"],
+      [SiPhp, "PHP", "#777bb4"],
+      [SiMariadb, "MariaDB", "#003545"],
+      [SiPostgresql, "PostgreSQL", "#4169e1"],
       [FiDatabase, "SQL", "#9a5b33"],
       [SiFastapi, "FastAPI", "#009688"],
       [SiExpress, "Express", "#404040"],
@@ -119,7 +119,7 @@ const stackGroups = [
       [SiKubernetes, "Kubernetes", "#326ce5"],
       [FaAws, "AWS", "#ff9900"],
       [SiTerraform, "Terraform", "#7b42bc"],
-      [SiVercel, "Vercel", "#24292f"],
+      [SiVercel, "Vercel", "#000000"],
       [SiPostman, "Postman", "#ff6c37"],
       [FiCheckCircle, "Playwright", "#2e8b57"],
       [SiVitest, "Vitest", "#7fbf3f"],
@@ -146,23 +146,23 @@ const stackGroups = [
 ];
 
 const projectStackIcons = {
-  React: SiReact,
-  JavaScript: SiJavascript,
-  HTML: SiHtml5,
-  CSS: SiCss,
-  Vite: SiVite,
-  PHP: SiPhp,
-  MariaDB: SiMariadb,
-  PHPMailer: FiMail,
-  Sentry: SiSentry,
-  "GitHub Actions": SiGithubactions,
-  Hostinger: SiHostinger,
-  "Z.com": FiServer,
-  Python: SiPython,
-  Django: SiDjango,
-  PostgreSQL: SiPostgresql,
-  "Gmail SMTP": SiGmail,
-  Vercel: SiVercel,
+  React: [SiReact, "#61dafb"],
+  JavaScript: [SiJavascript, "#f7df1e"],
+  HTML: [SiHtml5, "#e34f26"],
+  CSS: [SiCss, "#663399"],
+  Vite: [SiVite, "#9135ff"],
+  PHP: [SiPhp, "#777bb4"],
+  MariaDB: [SiMariadb, "#003545"],
+  PHPMailer: [FiMail, "#777bb4"],
+  Sentry: [SiSentry, "#362d59"],
+  "GitHub Actions": [SiGithubactions, "#2088ff"],
+  Hostinger: [SiHostinger, "#673de6"],
+  "Z.com": [FiServer, "#d62825"],
+  Python: [SiPython, "#3776ab"],
+  Django: [SiDjango, "#092e20"],
+  PostgreSQL: [SiPostgresql, "#4169e1"],
+  "Gmail SMTP": [SiGmail, "#ea4335"],
+  Vercel: [SiVercel, "#000000"],
 };
 
 const projectGroups = [
@@ -360,9 +360,9 @@ function ProjectCard({ project, index }) {
           aria-label="Technologies and hosting"
         >
           {project.stack.map((item) => {
-            const Icon = projectStackIcons[item];
+            const [Icon, color] = projectStackIcons[item] ?? [null, null];
             return (
-              <span key={item}>
+              <span key={item} style={{ "--brand-color": color }}>
                 {Icon && <Icon aria-hidden="true" />}
                 {item}
               </span>

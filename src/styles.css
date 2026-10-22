@@ -980,7 +980,7 @@ h3 {
 .project-card__tags svg {
   width: 13px;
   height: 13px;
-  color: #34794d;
+  color: var(--brand-color);
 }
 .project-card__cta {
   display: inline-flex;

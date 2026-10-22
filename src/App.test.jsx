@@ -144,6 +144,26 @@ describe("portfolio navigation", () => {
         ),
       ),
     ).toBe(true);
+    expect(
+      [...container.querySelectorAll(".project-card__tags span")].every(
+        (tag) => /^#[0-9a-f]{6}$/.test(tag.style.getPropertyValue("--brand-color")),
+      ),
+    ).toBe(true);
+    expect(
+      [...tagGroups[2].querySelectorAll("span")].map((tag) => [
+        tag.textContent,
+        tag.style.getPropertyValue("--brand-color"),
+      ]),
+    ).toEqual([
+      ["Python", "#3776ab"],
+      ["Django", "#092e20"],
+      ["HTML", "#e34f26"],
+      ["CSS", "#663399"],
+      ["JavaScript", "#f7df1e"],
+      ["PostgreSQL", "#4169e1"],
+      ["Gmail SMTP", "#ea4335"],
+      ["Vercel", "#000000"],
+    ]);
     expect(container.querySelector(".project-card__featured")).toBeNull();
     expect(screen.queryByText("HOA Dues Management")).not.toBeInTheDocument();
     expect(
