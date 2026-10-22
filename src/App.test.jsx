@@ -31,7 +31,7 @@ describe("portfolio navigation", () => {
     }
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      /From complex problem\s*to working product\./,
+      /From complex problems\s*to working products\./,
     );
     expect(container.querySelector(".hero__intro")).toHaveTextContent(
       "I build clear, reliable websites and business tools—and help the people who depend on them use them with confidence.",

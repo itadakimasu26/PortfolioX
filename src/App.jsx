@@ -402,9 +402,9 @@ export default function App() {
           <div className="hero__grid">
             <div className="hero__copy">
               <h1 id="hero-title">
-                From complex <em>problem</em> to{" "}
+                From complex <em>problems</em> to{" "}
                 <br />
-                working <span>product.</span>
+                working <span>products.</span>
               </h1>
               <p className="hero__intro">
                 I build clear, reliable websites and business tools—and help the
