@@ -402,13 +402,13 @@ export default function App() {
           <div className="hero__grid">
             <div className="hero__copy">
               <h1 id="hero-title">
-                Building what <em>works.</em>
+                From complex <em>problem</em> to{" "}
                 <br />
-                Supporting what <span>matters.</span>
+                working <span>product.</span>
               </h1>
               <p className="hero__intro">
-                I’m Michael John Ojoy. I build practical digital experiences and
-                bring clarity to complex technical problems.
+                I build clear, reliable websites and business tools—and help the
+                people who depend on them use them with confidence.
               </p>
               <div className="hero__actions">
                 <a className="button button--dark" href="#projects">
