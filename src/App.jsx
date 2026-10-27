@@ -53,7 +53,50 @@ import { FaFileExcel, FaMicrosoft, FaWindows } from "react-icons/fa";
 import Header from "./components/Header.jsx";
 import DeviceShowcase from "./components/DeviceShowcase.jsx";
 import FooterTransformation from "./components/FooterTransformation.jsx";
+import CopyEmail from "./components/CopyEmail.jsx";
 import { experience, projects } from "./data.js";
+
+const services = [
+  {
+    icon: FiMonitor,
+    title: "Websites & content systems",
+    description:
+      "Responsive websites with clear content, useful inquiry flows, and an editing experience your team can manage.",
+    deliverable: "A launch-ready website with a practical content workflow.",
+  },
+  {
+    icon: FiCreditCard,
+    title: "Business tools",
+    description:
+      "Booking, retail, and internal tools shaped around the way people actually work.",
+    deliverable: "A focused application with the admin tools it needs.",
+  },
+  {
+    icon: FiHeadphones,
+    title: "Technical support",
+    description:
+      "Application troubleshooting and clear guidance for the people who depend on your systems.",
+    deliverable: "A clear diagnosis, practical fixes, and next steps.",
+  },
+];
+
+const processSteps = [
+  {
+    title: "Discover",
+    description:
+      "We define the problem, the people it affects, and what a useful result looks like.",
+  },
+  {
+    title: "Build",
+    description:
+      "I design and develop the right solution, sharing progress and refining it with your feedback.",
+  },
+  {
+    title: "Launch & support",
+    description:
+      "We check the final experience, put it to work, and plan any follow-up support it needs.",
+  },
+];
 
 const stackGroups = [
   {
@@ -381,13 +424,12 @@ export default function App() {
           <div className="hero__grid">
             <div className="hero__copy">
               <h1 id="hero-title">
-                From complex <em>problems</em> to{" "}
-                <br />
+                From complex <em>problems</em> to <br />
                 working <span>products.</span>
               </h1>
               <p className="hero__intro">
-                I build clear, reliable websites and business tools—and help the
-                people who depend on them use them with confidence.
+                I build clear, reliable websites and business tools—and help
+                people use technology with confidence.
               </p>
               <div className="hero__actions">
                 <a className="button button--dark" href="#projects">
@@ -432,13 +474,65 @@ export default function App() {
                 processes easier. I’m at my best when a problem needs both
                 technical depth and a clear, human response.
               </p>
-              <a className="inline-link" href="#contact">
+              <a className="inline-link" href="#services">
                 More about working together{" "}
                 <FiArrowUpRight aria-hidden="true" />
               </a>
             </div>
           </div>
           <ExperienceTimeline />
+        </section>
+
+        <section
+          className="services section-shell"
+          id="services"
+          aria-labelledby="services-title"
+        >
+          <SectionLabel>Services</SectionLabel>
+          <div className="section-heading">
+            <h2 id="services-title">
+              How I can <em>help.</em>
+            </h2>
+            <p>
+              Practical development and support for the work your people do
+              every day.
+            </p>
+          </div>
+          <div className="services__grid">
+            {services.map(({ icon: Icon, title, description, deliverable }) => (
+              <article className="service-card" key={title}>
+                <span className="service-card__icon" aria-hidden="true">
+                  <Icon />
+                </span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+                <div className="service-card__deliverable">
+                  <span>What you get</span>
+                  <strong>{deliverable}</strong>
+                </div>
+              </article>
+            ))}
+          </div>
+          <section
+            className="services__process"
+            aria-labelledby="process-title"
+          >
+            <div className="services__process-heading">
+              <span className="services__process-kicker">THE APPROACH</span>
+              <h3 id="process-title">How we’ll work together.</h3>
+              <p>
+                A clear path from the first conversation to a useful result.
+              </p>
+            </div>
+            <div className="services__steps">
+              {processSteps.map(({ title, description }) => (
+                <div className="services__step" key={title}>
+                  <h4>{title}</h4>
+                  <p>{description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         </section>
 
         <section
@@ -511,19 +605,14 @@ export default function App() {
               <h2 id="contact-title">
                 Let’s make it <em>work.</em>
               </h2>
-              <p>
+              <p className="contact__intro">
                 Whether you need a developer, a technical support professional,
                 or someone who understands both, I’d be glad to talk.
               </p>
+              <p className="contact__reply">I reply within 2 business days.</p>
             </div>
             <div className="contact__details">
-              <div>
-                <FiMail
-                  className="contact__icon contact__icon--email"
-                  aria-hidden="true"
-                />
-                <span>michaeljohnojoy26@gmail.com</span>
-              </div>
+              <CopyEmail email="michaeljohnojoy26@gmail.com" />
               <a
                 href="https://www.linkedin.com/in/michael-john-ojoy-11b13116b"
                 target="_blank"
@@ -543,7 +632,10 @@ export default function App() {
                   className="contact__icon contact__icon--location"
                   aria-hidden="true"
                 />
-                <span>Binangonan, Rizal, Philippines</span>
+                <span className="contact__location">
+                  Binangonan, Rizal, Philippines
+                  <small>Philippine Time (UTC+8)</small>
+                </span>
               </div>
             </div>
           </div>

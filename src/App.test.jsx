@@ -11,6 +11,56 @@ import App from "./App.jsx";
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  delete navigator.clipboard;
+  localStorage.removeItem("portfolio-theme");
+  delete document.documentElement.dataset.theme;
+});
+
+describe("color theme", () => {
+  it("switches both ways and keeps the chosen theme after remounting", () => {
+    document.documentElement.dataset.theme = "light";
+    const page = render(<App />);
+    const darkButton = screen.getByRole("button", {
+      name: "Switch to dark mode",
+    });
+
+    fireEvent.click(darkButton);
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(localStorage.getItem("portfolio-theme")).toBe("dark");
+    expect(
+      screen.getByRole("button", { name: "Switch to light mode" }),
+    ).toBeInTheDocument();
+
+    page.unmount();
+    render(<App />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Switch to light mode" }),
+    );
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    expect(localStorage.getItem("portfolio-theme")).toBe("light");
+  });
+
+  it("follows the system preference until a manual choice is saved", () => {
+    delete document.documentElement.dataset.theme;
+    let onChange;
+    vi.stubGlobal("matchMedia", (query) => ({
+      matches: query === "(prefers-color-scheme: dark)",
+      addEventListener: (_, callback) => {
+        if (query === "(prefers-color-scheme: dark)") onChange = callback;
+      },
+      removeEventListener: () => {},
+    }));
+    render(<App />);
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+
+    act(() => onChange({ matches: false }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Switch to dark mode" }),
+    );
+    act(() => onChange({ matches: false }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+  });
 });
 
 describe("portfolio navigation", () => {
@@ -34,7 +84,7 @@ describe("portfolio navigation", () => {
       /From complex problems\s*to working products\./,
     );
     expect(container.querySelector(".hero__intro")).toHaveTextContent(
-      "I build clear, reliable websites and business tools—and help the people who depend on them use them with confidence.",
+      "I build clear, reliable websites and business tools—and help people use technology with confidence.",
     );
     expect(
       screen.getByRole("link", { name: "Scroll for more" }),
@@ -43,7 +93,13 @@ describe("portfolio navigation", () => {
       [...container.querySelectorAll(".section-label")].map(
         (label) => label.textContent,
       ),
-    ).toEqual(["About", "Selected projects", "Tech stack", "Contact"]);
+    ).toEqual([
+      "About",
+      "Services",
+      "Selected projects",
+      "Tech stack",
+      "Contact",
+    ]);
     expect(
       screen.queryByText("OPEN TO NEW OPPORTUNITIES"),
     ).not.toBeInTheDocument();
@@ -151,8 +207,8 @@ describe("portfolio navigation", () => {
       ),
     ).toBe(true);
     expect(
-      [...container.querySelectorAll(".project-card__tags span")].every(
-        (tag) => /^#[0-9a-f]{6}$/.test(tag.style.getPropertyValue("--brand-color")),
+      [...container.querySelectorAll(".project-card__tags span")].every((tag) =>
+        /^#[0-9a-f]{6}$/.test(tag.style.getPropertyValue("--brand-color")),
       ),
     ).toBe(true);
     expect(
@@ -185,10 +241,72 @@ describe("portfolio navigation", () => {
     expect(screen.queryByText("Start a conversation")).not.toBeInTheDocument();
     const email = screen.getByText("michaeljohnojoy26@gmail.com");
     expect(email.parentElement.tagName).toBe("DIV");
-    expect(email.parentElement.querySelectorAll("svg")).toHaveLength(1);
+    expect(email.parentElement.querySelectorAll("svg")).toHaveLength(2);
     expect(
       screen.queryByRole("link", { name: "michaeljohnojoy26@gmail.com" }),
     ).not.toBeInTheDocument();
+    expect(screen.getByText("Philippine Time (UTC+8)")).toBeInTheDocument();
+    expect(
+      screen.getByText("I reply within 2 business days."),
+    ).toBeInTheDocument();
+  });
+
+  it("explains the services and working process", () => {
+    const { container } = render(<App />);
+    const services = container.querySelector("#services");
+    expect(services).toHaveAttribute("aria-labelledby", "services-title");
+    expect(
+      [...services.querySelectorAll(".service-card h3")].map(
+        (heading) => heading.textContent,
+      ),
+    ).toEqual([
+      "Websites & content systems",
+      "Business tools",
+      "Technical support",
+    ]);
+    expect(
+      services.querySelectorAll(".service-card__deliverable"),
+    ).toHaveLength(3);
+    expect(
+      [...services.querySelectorAll(".services__step h4")].map(
+        (heading) => heading.textContent,
+      ),
+    ).toEqual(["Discover", "Build", "Launch & support"]);
+    expect(
+      screen.getByRole("link", { name: /More about working together/ }),
+    ).toHaveAttribute("href", "#services");
+  });
+
+  it("copies the visible email address and reports success", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Copy email address" }));
+
+    expect(writeText).toHaveBeenCalledWith("michaeljohnojoy26@gmail.com");
+    expect(
+      await screen.findByRole("button", { name: "Email copied" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Email address copied to clipboard.",
+    );
+  });
+
+  it("keeps the email readable when clipboard access fails", async () => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: vi.fn().mockRejectedValue(new Error("denied")) },
+    });
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Copy email address" }));
+
+    expect(await screen.findByRole("status")).toHaveTextContent(
+      "Unable to copy. Please select the email address above.",
+    );
+    expect(screen.getByText("michaeljohnojoy26@gmail.com")).toBeInTheDocument();
   });
 
   it("shows the updated experience timeline in the requested order", () => {

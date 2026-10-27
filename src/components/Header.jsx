@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiMoon, FiSun, FiX } from "react-icons/fi";
 import AnimatedTitle from "./AnimatedTitle.jsx";
 
 const links = [
@@ -13,7 +13,47 @@ export default function Header() {
   const [active, setActive] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [frosted, setFrosted] = useState(() => window.scrollY > 12);
+  const [theme, setTheme] = useState(() => {
+    const initial = document.documentElement.dataset.theme;
+    return initial === "dark" || initial === "light"
+      ? initial
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+  });
   const headerRef = useRef(null);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.content = theme === "dark" ? "#101713" : "#F5F3ED";
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-color-scheme: dark)");
+    const followSystem = (event) => {
+      try {
+        if (localStorage.getItem("portfolio-theme")) return;
+      } catch {
+        // Continue following the operating system if storage is unavailable.
+      }
+      setTheme(event.matches ? "dark" : "light");
+    };
+    preference.addEventListener("change", followSystem);
+    return () => preference.removeEventListener("change", followSystem);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem("portfolio-theme", next);
+    } catch {
+      // Theme switching remains available without persistent storage.
+    }
+  };
 
   useEffect(() => {
     const updateFrosted = () => setFrosted(window.scrollY > 12);
@@ -83,6 +123,21 @@ export default function Header() {
           </a>
           <AnimatedTitle />
         </div>
+        <button
+          className="theme-toggle"
+          type="button"
+          aria-label={
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+          }
+          title={theme === "dark" ? "Light mode" : "Dark mode"}
+          onClick={toggleTheme}
+        >
+          {theme === "dark" ? (
+            <FiSun aria-hidden="true" />
+          ) : (
+            <FiMoon aria-hidden="true" />
+          )}
+        </button>
         <button
           className="menu-toggle"
           type="button"

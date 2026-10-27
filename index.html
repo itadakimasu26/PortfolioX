@@ -4,12 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#F5F3ED" />
+    <script>
+      (() => {
+        let saved;
+        try {
+          saved = localStorage.getItem("portfolio-theme");
+        } catch {
+          // The system preference still works when storage is unavailable.
+        }
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content =
+          theme === "dark" ? "#101713" : "#F5F3ED";
+      })();
+    </script>
     <meta
       name="description"
       content="Michael John Ojoy is a software developer and technical support professional who builds practical web experiences and solves complex technology problems."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://michaeljohnojoy-portfolio.vercel.app/" />
+    <meta
+      property="og:url"
+      content="https://michaeljohnojoy-portfolio.vercel.app/"
+    />
     <meta
       property="og:title"
       content="Michael John Ojoy — Software Developer & Technical Support"
@@ -19,7 +41,10 @@
       content="Practical software. Dependable support. Explore Michael John Ojoy's work and experience."
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href="https://michaeljohnojoy-portfolio.vercel.app/" />
+    <link
+      rel="canonical"
+      href="https://michaeljohnojoy-portfolio.vercel.app/"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
